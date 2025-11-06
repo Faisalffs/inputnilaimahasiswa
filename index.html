@@ -1,0 +1,707 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Grade Manager</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: #0f0f1e;
+            color: #fff;
+            min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(139, 92, 246, 0.1) 0%, transparent 70%);
+            animation: rotate 20s linear infinite;
+            z-index: 0;
+        }
+
+        @keyframes rotate {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .app-container {
+            position: relative;
+            z-index: 1;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 50px;
+            animation: fadeInDown 0.8s ease;
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .header h1 {
+            font-size: 3.5em;
+            font-weight: 700;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 10px;
+            letter-spacing: -1px;
+        }
+
+        .header p {
+            font-size: 1.2em;
+            color: #a0a0c0;
+            font-weight: 300;
+        }
+
+        .main-grid {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 30px;
+            animation: fadeIn 1s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 24px;
+            padding: 30px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 40px rgba(139, 92, 246, 0.3);
+        }
+
+        .card-title {
+            font-size: 1.5em;
+            font-weight: 600;
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .icon {
+            width: 32px;
+            height: 32px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2em;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 0.9em;
+            color: #a0a0c0;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 14px 18px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            color: #fff;
+            font-size: 1em;
+            font-family: 'Poppins', sans-serif;
+            transition: all 0.3s ease;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #667eea;
+            background: rgba(255, 255, 255, 0.08);
+            box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.2);
+        }
+
+        .form-group input::placeholder {
+            color: #5a5a7a;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 12px;
+            margin-top: 25px;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 14px 24px;
+            border: none;
+            border-radius: 12px;
+            font-size: 1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Poppins', sans-serif;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.2);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+
+        .btn:hover::before {
+            width: 300px;
+            height: 300px;
+        }
+
+        .btn span {
+            position: relative;
+            z-index: 1;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .search-container {
+            margin-bottom: 25px;
+            position: relative;
+        }
+
+        .search-container input {
+            width: 100%;
+            padding: 14px 18px 14px 50px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            color: #fff;
+            font-size: 1em;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .search-container::before {
+            content: '🔍';
+            position: absolute;
+            left: 18px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 1.2em;
+        }
+
+        .table-wrapper {
+            overflow-x: auto;
+            border-radius: 16px;
+            background: rgba(255, 255, 255, 0.03);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+        }
+
+        thead {
+            background: rgba(102, 126, 234, 0.2);
+        }
+
+        th {
+            padding: 18px;
+            text-align: left;
+            font-weight: 600;
+            font-size: 0.85em;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #d0d0e0;
+        }
+
+        td {
+            padding: 18px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            color: #e0e0f0;
+        }
+
+        tbody tr {
+            transition: all 0.3s ease;
+        }
+
+        tbody tr:hover {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .grade-badge {
+            display: inline-block;
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 0.85em;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .grade-A {
+            background: linear-gradient(135deg, #11998e, #38ef7d);
+            color: #fff;
+        }
+
+        .grade-B {
+            background: linear-gradient(135deg, #4facfe, #00f2fe);
+            color: #fff;
+        }
+
+        .grade-C {
+            background: linear-gradient(135deg, #f093fb, #f5576c);
+            color: #fff;
+        }
+
+        .grade-D {
+            background: linear-gradient(135deg, #fa709a, #fee140);
+            color: #fff;
+        }
+
+        .grade-E {
+            background: linear-gradient(135deg, #ff6b6b, #ee5a6f);
+            color: #fff;
+        }
+
+        .action-btn {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 8px;
+            font-size: 0.85em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-right: 6px;
+        }
+
+        .btn-edit {
+            background: rgba(255, 193, 7, 0.2);
+            color: #ffc107;
+            border: 1px solid rgba(255, 193, 7, 0.3);
+        }
+
+        .btn-edit:hover {
+            background: rgba(255, 193, 7, 0.3);
+            transform: scale(1.05);
+        }
+
+        .btn-delete {
+            background: rgba(244, 67, 54, 0.2);
+            color: #f44336;
+            border: 1px solid rgba(244, 67, 54, 0.3);
+        }
+
+        .btn-delete:hover {
+            background: rgba(244, 67, 54, 0.3);
+            transform: scale(1.05);
+        }
+
+        .alert {
+            padding: 16px 20px;
+            border-radius: 12px;
+            margin-bottom: 25px;
+            display: none;
+            animation: slideIn 0.4s ease;
+            font-weight: 500;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .alert-success {
+            background: rgba(56, 239, 125, 0.15);
+            color: #38ef7d;
+            border: 1px solid rgba(56, 239, 125, 0.3);
+        }
+
+        .alert-error {
+            background: rgba(244, 67, 54, 0.15);
+            color: #f44336;
+            border: 1px solid rgba(244, 67, 54, 0.3);
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #5a5a7a;
+        }
+
+        .empty-state svg {
+            width: 80px;
+            height: 80px;
+            margin-bottom: 20px;
+            opacity: 0.3;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #667eea;
+            font-size: 1.1em;
+        }
+
+        @media (max-width: 1024px) {
+            .main-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .header h1 {
+                font-size: 2.5em;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2em;
+            }
+
+            .card {
+                padding: 20px;
+            }
+
+            table {
+                font-size: 0.85em;
+            }
+
+            th, td {
+                padding: 12px;
+            }
+
+            .btn-group {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <div class="header">
+            <h1>📊 Grade Manager</h1>
+            <p>Sistem Manajemen Nilai Mahasiswa Modern</p>
+        </div>
+
+        <div id="alertBox" class="alert"></div>
+
+        <div class="main-grid">
+            <div class="card">
+                <div class="card-title">
+                    <div class="icon">📝</div>
+                    Input Data
+                </div>
+                <form id="mahasiswaForm">
+                    <div class="form-group">
+                        <label for="nim">NIM</label>
+                        <input type="text" id="nim" required placeholder="202201001">
+                    </div>
+                    <div class="form-group">
+                        <label for="nama">Nama Lengkap</label>
+                        <input type="text" id="nama" required placeholder="John Doe">
+                    </div>
+                    <div class="form-group">
+                        <label for="mataKuliah">Mata Kuliah</label>
+                        <input type="text" id="mataKuliah" required placeholder="Pemrograman Web">
+                    </div>
+                    <div class="form-group">
+                        <label for="nilai">Nilai UTS (0-100)</label>
+                        <input type="number" id="nilai" required min="0" max="100" placeholder="85">
+                    </div>
+                    <div class="btn-group">
+                        <button type="submit" class="btn btn-primary">
+                            <span id="btnText">Tambah Data</span>
+                        </button>
+                        <button type="button" class="btn btn-secondary" onclick="resetForm()">
+                            <span>Reset</span>
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <div class="card">
+                <div class="card-title">
+                    <div class="icon">📋</div>
+                    Daftar Nilai
+                </div>
+                <div class="search-container">
+                    <input type="text" id="searchInput" placeholder="Cari NIM, nama, atau mata kuliah...">
+                </div>
+                <div class="table-wrapper">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>No</th>
+                                <th>NIM</th>
+                                <th>Nama</th>
+                                <th>Mata Kuliah</th>
+                                <th>Nilai</th>
+                                <th>Grade</th>
+                                <th>Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tableBody">
+                            <tr>
+                                <td colspan="7" class="loading">Memuat data...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
+        import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc, updateDoc, query, orderBy, serverTimestamp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyA6FwbqZLH_wPJSZ3s9E9qYlJzG-zhb7sM",
+            authDomain: "inputnilaimahasiswa-2cae8.firebaseapp.com",
+            projectId: "inputnilaimahasiswa-2cae8",
+            storageBucket: "inputnilaimahasiswa-2cae8.firebasestorage.app",
+            messagingSenderId: "724952004989",
+            appId: "1:724952004989:web:89c43954812278a0be7414",
+            measurementId: "G-BNDMBHG6M9"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        let mahasiswaData = [];
+        let editingId = null;
+
+        function getGrade(nilai) {
+            if (nilai >= 85) return 'A';
+            if (nilai >= 70) return 'B';
+            if (nilai >= 60) return 'C';
+            if (nilai >= 50) return 'D';
+            return 'E';
+        }
+
+        function showAlert(message, type) {
+            const alertBox = document.getElementById('alertBox');
+            alertBox.textContent = message;
+            alertBox.className = `alert alert-${type}`;
+            alertBox.style.display = 'block';
+            
+            setTimeout(() => {
+                alertBox.style.display = 'none';
+            }, 3000);
+        }
+
+        async function loadData() {
+            try {
+                const q = query(collection(db, 'mahasiswa'), orderBy('timestamp', 'desc'));
+                const querySnapshot = await getDocs(q);
+                
+                mahasiswaData = [];
+                querySnapshot.forEach((doc) => {
+                    mahasiswaData.push({
+                        id: doc.id,
+                        ...doc.data()
+                    });
+                });
+                
+                displayData(mahasiswaData);
+            } catch (error) {
+                console.error('Error loading data:', error);
+                showAlert('Gagal memuat data: ' + error.message, 'error');
+                document.getElementById('tableBody').innerHTML = `
+                    <tr>
+                        <td colspan="7" style="text-align: center; color: #f44336; padding: 40px;">
+                            ⚠️ Gagal memuat data. Silakan refresh halaman.
+                        </td>
+                    </tr>
+                `;
+            }
+        }
+
+        function displayData(data) {
+            const tableBody = document.getElementById('tableBody');
+            
+            if (data.length === 0) {
+                tableBody.innerHTML = `
+                    <tr>
+                        <td colspan="7" class="empty-state">
+                            <div>
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                                </svg>
+                                <h3>Belum ada data</h3>
+                                <p>Mulai tambahkan data mahasiswa</p>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+
+            tableBody.innerHTML = data.map((item, index) => {
+                const grade = getGrade(item.nilai);
+                return `
+                    <tr>
+                        <td>${index + 1}</td>
+                        <td>${item.nim}</td>
+                        <td>${item.nama}</td>
+                        <td>${item.mataKuliah}</td>
+                        <td>${item.nilai}</td>
+                        <td><span class="grade-badge grade-${grade}">${grade}</span></td>
+                        <td>
+                            <button class="action-btn btn-edit" onclick="editData('${item.id}')">Edit</button>
+                            <button class="action-btn btn-delete" onclick="deleteData('${item.id}')">Hapus</button>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        window.editData = function(id) {
+            const data = mahasiswaData.find(item => item.id === id);
+            if (data) {
+                document.getElementById('nim').value = data.nim;
+                document.getElementById('nama').value = data.nama;
+                document.getElementById('mataKuliah').value = data.mataKuliah;
+                document.getElementById('nilai').value = data.nilai;
+                editingId = id;
+                
+                document.getElementById('btnText').textContent = 'Update Data';
+                showAlert('Mode Edit: Ubah data dan klik Update', 'success');
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+        };
+
+        window.deleteData = async function(id) {
+            if (confirm('Yakin ingin menghapus data ini?')) {
+                try {
+                    await deleteDoc(doc(db, 'mahasiswa', id));
+                    showAlert('Data berhasil dihapus!', 'success');
+                    loadData();
+                } catch (error) {
+                    console.error('Error deleting:', error);
+                    showAlert('Gagal menghapus data: ' + error.message, 'error');
+                }
+            }
+        };
+
+        window.resetForm = function() {
+            document.getElementById('mahasiswaForm').reset();
+            editingId = null;
+            document.getElementById('btnText').textContent = 'Tambah Data';
+            showAlert('Form telah direset', 'success');
+        };
+
+        document.getElementById('mahasiswaForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const data = {
+                nim: document.getElementById('nim').value,
+                nama: document.getElementById('nama').value,
+                mataKuliah: document.getElementById('mataKuliah').value,
+                nilai: parseInt(document.getElementById('nilai').value),
+                timestamp: serverTimestamp()
+            };
+
+            try {
+                if (editingId) {
+                    await updateDoc(doc(db, 'mahasiswa', editingId), data);
+                    showAlert('Data berhasil diupdate!', 'success');
+                    editingId = null;
+                    document.getElementById('btnText').textContent = 'Tambah Data';
+                } else {
+                    await addDoc(collection(db, 'mahasiswa'), data);
+                    showAlert('Data berhasil ditambahkan!', 'success');
+                }
+                
+                document.getElementById('mahasiswaForm').reset();
+                loadData();
+            } catch (error) {
+                console.error('Error:', error);
+                showAlert('Gagal menyimpan data: ' + error.message, 'error');
+            }
+        });
+
+        document.getElementById('searchInput').addEventListener('input', (e) => {
+            const searchTerm = e.target.value.toLowerCase();
+            const filtered = mahasiswaData.filter(item => 
+                item.nim.toLowerCase().includes(searchTerm) ||
+                item.nama.toLowerCase().includes(searchTerm) ||
+                item.mataKuliah.toLowerCase().includes(searchTerm)
+            );
+            displayData(filtered);
+        });
+
+        loadData();
+    </script>
+</body>
+</html>
