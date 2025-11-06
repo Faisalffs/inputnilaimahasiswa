@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aplikasi Nilai Mahasiswa</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        .header p {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+
+        .content {
+            padding: 30px;
+        }
+
+        .form-section {
+            background: #f8f9fa;
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+        }
+
+        .form-section h2 {
+            color: #667eea;
+            margin-bottom: 20px;
+            font-size: 1.8em;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group label {
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #333;
+        }
+
+        .form-group input {
+            padding: 12px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 1em;
+            transition: all 0.3s;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .button-group {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .btn {
+            padding: 12px 30px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            flex: 1;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+            flex: 1;
+        }
+
+        .btn-secondary:hover {
+            background: #5a6268;
+        }
+
+        .alert {
+            padding: 15px 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: none;
+            animation: slideDown 0.3s ease;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .alert-success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .alert-error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .table-section h2 {
+            color: #667eea;
+            margin-bottom: 20px;
+            font-size: 1.8em;
+        }
+
+        .search-box {
+            margin-bottom: 20px;
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 1em;
+        }
+
+        .table-container {
+            overflow-x: auto;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+        }
+
+        thead {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        th {
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.9em;
+            letter-spacing: 0.5px;
+        }
+
+        td {
+            padding: 15px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        tbody tr {
+            transition: all 0.3s;
+        }
+
+        tbody tr:hover {
+            background: #f8f9fa;
+        }
+
+        .grade-badge {
+            display: inline-block;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 0.9em;
+        }
+
+        .grade-A { background: #d4edda; color: #155724; }
+        .grade-B { background: #d1ecf1; color: #0c5460; }
+        .grade-C { background: #fff3cd; color: #856404; }
+        .grade-D { background: #f8d7da; color: #721c24; }
+        .grade-E { background: #f5c6cb; color: #721c24; }
+
+        .action-buttons {
+            display: flex;
+            gap: 8px;
+        }
+
+        .btn-small {
+            padding: 6px 12px;
+            font-size: 0.85em;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 600;
+        }
+
+        .btn-edit {
+            background: #ffc107;
+            color: #000;
+        }
+
+        .btn-edit:hover {
+            background: #e0a800;
+        }
+
+        .btn-delete {
+            background: #dc3545;
+            color: white;
+        }
+
+        .btn-delete:hover {
+            background: #c82333;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #667eea;
+            font-size: 1.2em;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #6c757d;
+        }
+
+        .empty-state svg {
+            width: 100px;
+            height: 100px;
+            margin-bottom: 20px;
+            opacity: 0.3;
+        }
+
+        @media (max-width: 768px) {
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .button-group {
+                flex-direction: column;
+            }
+
+            .header h1 {
+                font-size: 1.8em;
+            }
+
+            table {
+                font-size: 0.9em;
+            }
+
+            th, td {
+                padding: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>
+                📚 Aplikasi Nilai Mahasiswa
+            </h1>
+            <p>Sistem Manajemen Nilai UTS</p>
+        </div>
+
+        <div class="content">
+            <div id="alertBox" class="alert"></div>
+
+            <div class="form-section">
+                <h2>Input Data Nilai</h2>
+                <form id="mahasiswaForm">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="nim">NIM:</label>
+                            <input type="text" id="nim" required placeholder="Masukkan NIM">
+                        </div>
+                        <div class="form-group">
+                            <label for="nama">Nama Mahasiswa:</label>
+                            <input type="text" id="nama" required placeholder="Masukkan nama lengkap">
+                        </div>
+                        <div class="form-group">
+                            <label for="mataKuliah">Mata Kuliah:</label>
+                            <input type="text" id="mataKuliah" required placeholder="Masukkan mata kuliah">
+                        </div>
+                        <div class="form-group">
+                            <label for="nilai">Nilai (0-100):</label>
+                            <input type="number" id="nilai" required min="0" max="100" placeholder="Masukkan nilai">
+                        </div>
+                    </div>
+                    <div class="button-group">
+                        <button type="submit" class="btn btn-primary">
+                            ➕ Tambah Data
+                        </button>
+                        <button type="button" class="btn btn-secondary" onclick="resetForm()">
+                            🔄 Reset Form
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <div class="table-section">
+                <h2>Daftar Nilai Mahasiswa</h2>
+                <div class="search-box">
+                    <input type="text" id="searchInput" placeholder="🔍 Cari berdasarkan NIM, Nama, atau Mata Kuliah...">
+                </div>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>No</th>
+                                <th>NIM</th>
+                                <th>Nama</th>
+                                <th>Mata Kuliah</th>
+                                <th>Nilai</th>
+                                <th>Grade</th>
+                                <th>Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tableBody">
+                            <tr>
+                                <td colspan="7" class="loading">Memuat data...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
+        import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc, updateDoc, query, orderBy, serverTimestamp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
+
+       const firebaseConfig = {
+  apiKey: "AIzaSyA6FwbqZLH_wPJSZ3s9E9qYlJzG-zhb7sM",
+  authDomain: "inputnilaimahasiswa-2cae8.firebaseapp.com",
+  projectId: "inputnilaimahasiswa-2cae8",
+  storageBucket: "inputnilaimahasiswa-2cae8.firebasestorage.app",
+  messagingSenderId: "724952004989",
+  appId: "1:724952004989:web:89c43954812278a0be7414",
+  measurementId: "G-BNDMBHG6M9"
+};
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        let mahasiswaData = [];
+        let editingId = null;
+
+        function getGrade(nilai) {
+            if (nilai >= 85) return 'A';
+            if (nilai >= 70) return 'B';
+            if (nilai >= 60) return 'C';
+            if (nilai >= 50) return 'D';
+            return 'E';
+        }
+
+        function showAlert(message, type) {
+            const alertBox = document.getElementById('alertBox');
+            alertBox.textContent = message;
+            alertBox.className = `alert alert-${type}`;
+            alertBox.style.display = 'block';
+            
+            setTimeout(() => {
+                alertBox.style.display = 'none';
+            }, 3000);
+        }
+
+        async function loadData() {
+            try {
+                const q = query(collection(db, 'mahasiswa'), orderBy('timestamp', 'desc'));
+                const querySnapshot = await getDocs(q);
+                
+                mahasiswaData = [];
+                querySnapshot.forEach((doc) => {
+                    mahasiswaData.push({
+                        id: doc.id,
+                        ...doc.data()
+                    });
+                });
+                
+                displayData(mahasiswaData);
+            } catch (error) {
+                console.error('Error loading data:', error);
+                showAlert('Gagal memuat data: ' + error.message, 'error');
+                document.getElementById('tableBody').innerHTML = `
+                    <tr>
+                        <td colspan="7" style="text-align: center; color: #dc3545; padding: 40px;">
+                            ⚠️ Gagal memuat data. Silakan refresh halaman.
+                        </td>
+                    </tr>
+                `;
+            }
+        }
+
+        function displayData(data) {
+            const tableBody = document.getElementById('tableBody');
+            
+            if (data.length === 0) {
+                tableBody.innerHTML = `
+                    <tr>
+                        <td colspan="7" class="empty-state">
+                            <div>
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                                </svg>
+                                <h3>Belum ada data</h3>
+                                <p>Silakan tambahkan data mahasiswa terlebih dahulu</p>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+
+            tableBody.innerHTML = data.map((item, index) => {
+                const grade = getGrade(item.nilai);
+                return `
+                    <tr>
+                        <td>${index + 1}</td>
+                        <td>${item.nim}</td>
+                        <td>${item.nama}</td>
+                        <td>${item.mataKuliah}</td>
+                        <td>${item.nilai}</td>
+                        <td><span class="grade-badge grade-${grade}">${grade}</span></td>
+                        <td>
+                            <div class="action-buttons">
+                                <button class="btn-small btn-edit" onclick="editData('${item.id}')">✏️ Edit</button>
+                                <button class="btn-small btn-delete" onclick="deleteData('${item.id}')">🗑️ Hapus</button>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        window.editData = function(id) {
+            const data = mahasiswaData.find(item => item.id === id);
+            if (data) {
+                document.getElementById('nim').value = data.nim;
+                document.getElementById('nama').value = data.nama;
+                document.getElementById('mataKuliah').value = data.mataKuliah;
+                document.getElementById('nilai').value = data.nilai;
+                editingId = id;
+                
+                document.querySelector('.btn-primary').innerHTML = '💾 Update Data';
+                showAlert('Mode Edit: Silakan ubah data dan klik Update', 'success');
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+        };
+
+        window.deleteData = async function(id) {
+            if (confirm('Apakah Anda yakin ingin menghapus data ini?')) {
+                try {
+                    await deleteDoc(doc(db, 'mahasiswa', id));
+                    showAlert('Data berhasil dihapus!', 'success');
+                    loadData();
+                } catch (error) {
+                    console.error('Error deleting:', error);
+                    showAlert('Gagal menghapus data: ' + error.message, 'error');
+                }
+            }
+        };
+
+        window.resetForm = function() {
+            document.getElementById('mahasiswaForm').reset();
+            editingId = null;
+            document.querySelector('.btn-primary').innerHTML = '➕ Tambah Data';
+            showAlert('Form telah direset', 'success');
+        };
+
+        document.getElementById('mahasiswaForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const data = {
+                nim: document.getElementById('nim').value,
+                nama: document.getElementById('nama').value,
+                mataKuliah: document.getElementById('mataKuliah').value,
+                nilai: parseInt(document.getElementById('nilai').value),
+                timestamp: serverTimestamp()
+            };
+
+            try {
+                if (editingId) {
+                    await updateDoc(doc(db, 'mahasiswa', editingId), data);
+                    showAlert('Data berhasil diupdate!', 'success');
+                    editingId = null;
+                    document.querySelector('.btn-primary').innerHTML = '➕ Tambah Data';
+                } else {
+                    await addDoc(collection(db, 'mahasiswa'), data);
+                    showAlert('Data berhasil ditambahkan!', 'success');
+                }
+                
+                document.getElementById('mahasiswaForm').reset();
+                loadData();
+            } catch (error) {
+                console.error('Error:', error);
+                showAlert('Gagal menyimpan data: ' + error.message, 'error');
+            }
+        });
+
+        document.getElementById('searchInput').addEventListener('input', (e) => {
+            const searchTerm = e.target.value.toLowerCase();
+            const filtered = mahasiswaData.filter(item => 
+                item.nim.toLowerCase().includes(searchTerm) ||
+                item.nama.toLowerCase().includes(searchTerm) ||
+                item.mataKuliah.toLowerCase().includes(searchTerm)
+            );
+            displayData(filtered);
+        });
+
+        loadData();
+    </script>
+</body>
+</html>
